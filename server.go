@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/alvinarthas/learn_gin/config"
+	"github.com/alvinarthas/learn_gin/middleware"
 	"github.com/alvinarthas/learn_gin/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/subosito/gotenv"
@@ -22,6 +23,9 @@ func main() {
 		apiV1.GET("/auth/:provider", routes.RedirectHandler)
 		apiV1.GET("/auth/:provider/callback", routes.CallbackHandler)
 
+		// Testing Token
+		apiV1.GET("/check", middleware.IsAuth(), routes.CheckToken)
+
 		// Module Grouping
 		articles := apiV1.Group("/article")
 		{
@@ -30,10 +34,6 @@ func main() {
 			articles.GET("/:slug", routes.GetArticle)
 			articles.POST("/", routes.PostArticle)
 		}
-		// Old Route initialization
-		// apiV1.GET("/", getHome)
-		// apiV1.GET("/article/:title", getArticle)
-		// apiV1.POST("/articles", postArticle)
 	}
 
 	router.Run()
