@@ -24,5 +24,8 @@ func InitDB() {
 	}
 
 	// Migrate the Database
-	DB.AutoMigrate(&models.Article{})
+	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Article{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+
+	DB.Model(&models.User{}).Related(&models.Article{})
 }

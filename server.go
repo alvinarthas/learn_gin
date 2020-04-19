@@ -4,12 +4,14 @@ import (
 	"github.com/alvinarthas/learn_gin/config"
 	"github.com/alvinarthas/learn_gin/routes"
 	"github.com/gin-gonic/gin"
+	"github.com/subosito/gotenv"
 )
 
 func main() {
 	// set up database
 	config.InitDB()
 	defer config.DB.Close()
+	gotenv.Load()
 
 	//  Setting Default Router
 	router := gin.Default()
@@ -17,6 +19,9 @@ func main() {
 	// Verison Grouping
 	apiV1 := router.Group("/api/v1/")
 	{
+		apiV1.GET("/auth/:provider", routes.RedirectHandler)
+		apiV1.GET("/auth/:provider/callback", routes.CallbackHandler)
+
 		// Module Grouping
 		articles := apiV1.Group("/article")
 		{
