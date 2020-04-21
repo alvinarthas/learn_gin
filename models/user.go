@@ -8,7 +8,7 @@ type User struct {
 	Articles []Article
 	UserName string
 	FullName string
-	Email    string `gorm:"unique_index"`
+	Email    string
 	SocialID string
 	Provider string
 	Avatar   string

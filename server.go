@@ -25,14 +25,14 @@ func main() {
 
 		// Testing Token
 		apiV1.GET("/check", middleware.IsAuth(), routes.CheckToken)
-
+		apiV1.GET("/article/:slug", routes.GetArticle)
 		// Module Grouping
-		articles := apiV1.Group("/article")
+		articles := apiV1.Group("/articles")
 		{
 			// Route initialization
 			articles.GET("/", routes.GetHome)
-			articles.GET("/:slug", routes.GetArticle)
-			articles.POST("/", routes.PostArticle)
+			articles.GET("/tag/:tag", routes.GetArticleByTag)
+			articles.POST("/", middleware.IsAuth(), routes.PostArticle)
 		}
 	}
 
