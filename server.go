@@ -26,13 +26,19 @@ func main() {
 		// Testing Token
 		apiV1.GET("/check", middleware.IsAuth(), routes.CheckToken)
 		apiV1.GET("/article/:slug", routes.GetArticle)
+
+		// Profile
+		apiV1.GET("/profile/:user", routes.GetProfile)
+
 		// Module Grouping
 		articles := apiV1.Group("/articles")
 		{
 			// Route initialization
 			articles.GET("/", routes.GetHome)
-			articles.GET("/tag/:tag", routes.GetArticleByTag)
 			articles.POST("/", middleware.IsAuth(), routes.PostArticle)
+			articles.GET("/tag/:tag", routes.GetArticleByTag)
+			articles.PUT("/update/:id", middleware.IsAuth(), routes.UpdateArticle)
+			articles.DELETE("/delete/:id", middleware.IsAdmin(), routes.DeleteArticle)
 		}
 	}
 

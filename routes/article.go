@@ -101,3 +101,50 @@ func PostArticle(c *gin.Context) {
 		"data":   item,
 	})
 }
+
+// UpdateArticle buat update
+func UpdateArticle(c *gin.Context) {
+	id := c.Param("id")
+
+	var item models.Article
+
+	if config.DB.First(&item, "id = ?", id).RecordNotFound() {
+		c.JSON(404, gin.H{
+			"status":  "error",
+			"message": "record not found"})
+		c.Abort()
+		return
+	}
+
+	if uint(c.MustGet("jwt_user_id").(float64)) != item.UserID {
+		c.JSON(403, gin.H{
+			"status":  "error",
+			"message": "this data is forbidden"})
+		c.Abort()
+		return
+	}
+
+	config.DB.Model(&item).Where("id = ?", id).Updates(models.Article{
+		Title: c.PostForm("title"),
+		Desc:  c.PostForm("desc"),
+		Tag:   c.PostForm("tag"),
+	})
+
+	c.JSON(200, gin.H{
+		"status": "berhasil update data",
+		"data":   item,
+	})
+}
+
+// DeleteArticle is to delete Article
+func DeleteArticle(c *gin.Context) {
+
+	id := c.Param("id")
+	var article models.Article
+
+	config.DB.Where("id = ?", id).Delete(&article)
+	c.JSON(200, gin.H{
+		"status": "berhasil delete",
+		"data":   article,
+	})
+}
